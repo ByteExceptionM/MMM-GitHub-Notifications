@@ -3,7 +3,7 @@ Module.register('MMM-GitHub-Notifications', {
 
     defaults: {
         updateInterval: 10 * 60 * 1000,
-        maxNotifications: 1,
+        maxNotifications: 5,
         autoHide: false
     },
 
