@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
         }
 
         axios
-            .get('https://api.github.com/notifications?participating=true&per_page=' + Math.max(config.maxNotifications, 15), headers).then((response) => {
+            .get('https://api.github.com/notifications?participating=true&per_page=' + Math.max(config.maxNotifications, 20), headers).then((response) => {
                 var notifications = [];
 
                 response.data.forEach(element => {
