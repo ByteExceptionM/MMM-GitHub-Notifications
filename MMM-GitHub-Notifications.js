@@ -3,8 +3,7 @@ Module.register('MMM-GitHub-Notifications', {
 
     defaults: {
         updateInterval: 10 * 60 * 1000,
-        maxNotifications: 5,
-        autoHide: false
+        maxNotifications: 5
     },
 
     start: function () {
@@ -35,11 +34,6 @@ Module.register('MMM-GitHub-Notifications', {
         table.classList.add('notificationsTable');
 
         if (this.notifications.length == 0) {
-            if (this.config.autoHide) {
-                table.classList.add('hidden');
-                return table;
-            }
-
             var row = document.createElement('tr');
             table.append(row);
 

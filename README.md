@@ -19,7 +19,6 @@ You can add the following options to the `config.js` file:
 | `authToken`        | The GitHub authentication token for the requests.<br><br>**Type:** `string` <br>Required: `true`
 | `updateInterval`   | Interval of updating notifications.<br><br>**Type:** `int`(milliseconds) <br>Default: `60.000 milliseconds`
 | `maxNotifications` | Maximum of shown notifications.<br><br>**Type:** `int` <br>Default: `5`<br>Max: `20`
-| `autoHide`         | Auto hide module if there are no unreaded notifications.<br><br>**Type:** `boolean` <br>Default: `true`
 
 
 Here is an example of an entry in `config.js`
