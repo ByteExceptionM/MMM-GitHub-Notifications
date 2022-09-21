@@ -1,0 +1,8 @@
+{
+  "name": "mmm-github-notifications",
+  "description": "A module for the MagicMirror² which creates a table with intractable unread GitHub notifications.",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
