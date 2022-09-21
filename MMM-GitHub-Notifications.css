@@ -1,0 +1,8 @@
+.MMM-GitHub-Notifications .notificationsTable {
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.MMM-GitHub-Notifications .hidden {
+    display: none;
+}

@@ -1,14 +1,14 @@
 var NodeHelper = require('node_helper');
 var axios = require('axios');
 
+var notifications = [];
+
 module.exports = NodeHelper.create({
     start: function () {
         console.log('MMM-GitHub-Notifications helper started...');
     },
 
     getNotifications: function (config) {
-        var self = this;
-
         var headers = {
             headers: {
                 Accept: 'application/vnd.github+json',
@@ -17,34 +17,27 @@ module.exports = NodeHelper.create({
         }
 
         axios
-            .get('https://api.github.com/notifications?participating=true&per_page=' + Math.max(config.maxNotifications, 20), headers).then((response) => {
-                var notifications = [];
+            .get('https://api.github.com/notifications?participating=true&per_page=' + Math.min(config.maxNotifications, 20), headers)
+            .then((response) => {
+                notifications = [];
 
                 response.data.forEach(element => {
                     notifications.push({
+                        id: element.id,
                         title: element.subject.title,
                         type: element.subject.type,
                         reason: element.reason,
-                        repository: element.repository.name
+                        repository: element.repository.name,
+                        date: element.updated_at
                     });
                 });
 
-                notifications.forEach(element => {
-                    console.log(element);
-                });
-
-                self.sendSocketNotification('MMM-GitHub-Notifications_RESULT', {
-                    data: notifications
-                });
+                this.sendSocketNotification('MMM-GitHub-Notifications_RESULT', { data: notifications });
             })
-            .catch((exc) => {
-                console.error('[MMM-GitHub-Notifications] Error occurred : ' + exc)
-            });
+            .catch((exc) => console.error('[MMM-GitHub-Notifications] Error occurred : ' + exc));
     },
 
-    updateNotificationLastReadTime: function (config) {
-        var self = this;
-
+    markNotificationAsRead: function (config, notificationId) {
         var headers = {
             headers: {
                 Accept: 'application/vnd.github+json',
@@ -52,26 +45,17 @@ module.exports = NodeHelper.create({
             }
         }
 
-        var requestBody = {
-            last_read_at: new Date().toISOString,
-            read: true
-        }
-
         axios
-            .put('https://api.github.com/notifications', JSON.stringify(requestBody), headers).then((response) => {
-                console.log(response);
-
-                self.getNotifications(config);
-            })
-            .catch((exc) => {
-                console.error('[MMM-GitHub-Notifications] Error occurred : ' + exc)
-            });
-
+            .patch('https://api.github.com/notifications/threads/' + notificationId, null, headers)
+            .then((response) => this.getNotifications(config))
+            .catch((exc) => console.error('[MMM-GitHub-Notifications] Error occurred : ' + exc));
     },
 
-    socketNotificationReceived: function (notification, config) {
+    socketNotificationReceived: function (notification, payload) {
         if (notification === 'MMM-GitHub-Notifications_GET') {
-            this.getNotifications(config);
+            this.getNotifications(payload.config);
+        } else if (notification === 'MMM-GitHub-Notifications_READ') {
+            this.markNotificationAsRead(payload.config, payload.notificationId);
         }
     }
 
