@@ -3,6 +3,7 @@ Module.register('MMM-GitHub-Notifications', {
 
     defaults: {
         updateInterval: 10 * 60 * 1000,
+        maxContentLength: 30,
         maxNotifications: 5
     },
 
@@ -60,8 +61,8 @@ Module.register('MMM-GitHub-Notifications', {
 
         var title = notification.title;
 
-        if (title.length > 30)
-            title = notification.title.substring(0, 30).trim() + '...';
+        if (title.length > self.config.maxContentLength)
+            title = notification.title.substring(0, self.config.maxContentLength).trim() + '...';
 
         var titleNode = document.createElement('td');
         titleNode.append(document.createTextNode(title));
